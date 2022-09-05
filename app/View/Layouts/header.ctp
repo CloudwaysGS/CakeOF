@@ -1,3 +1,4 @@
+<?php if($this->Session->read('Auth.User.id')): ?>
 <nav class="navbar navbar-expand-lg navbar-dark" style="background-color: #f08014;">
       <div class=" container-fluid">
             <a class="navbar-brand" href="/">OFMS</a>
@@ -16,5 +17,9 @@
                   </ul>
             </div>
       </div>
+      <?php if($this->Session->read('Auth.User.id')): ?>
+             <?= $this->Html->link('Deconnecter', array('controller' => 'users', 'action' => 'logout'),array('style'=>'color:white;')); ?>
+             <?php endif ?>
       <img src="https://www.au-senegal.com/local/cache-gd2/d9/068b52749f47422ba622ac232f9210.jpg" height="50px" width="50px" alt="orange">
 </nav>
+<?php endif ?>

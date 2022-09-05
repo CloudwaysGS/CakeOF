@@ -39,6 +39,9 @@ $cakeVersion = __d('cake_dev', 'CakePHP %s', Configure::version())
 
 <body>
 	<?php require_once('header.ctp') ?>
+	<div class="p-3 mt-3 h1">
+		<?= $this->Session->flash(); ?>
+	</div>
 	<?php echo $this->fetch('content'); ?>
 
 
