@@ -10,6 +10,7 @@ class UsersController extends AppController
       public function login()
       {
             if (!empty($this->request->data)) {
+                  // debug($this->Auth->login());
                   if ($this->Auth->login()) {
                         if ($this->Session->read('Auth.User.roles') == 'ROLE_ADMIN') {
                               return $this->redirect(array('action' => 'accueilAdmin'));
@@ -36,14 +37,23 @@ class UsersController extends AppController
                   $email = $data['email'];
                   $password = $data['password'];
                   $this->Session->read('Auth.User') ? $roles = 'ROLE_USER' : 'ROLE_ADMIN';
-                  $this->User->save(null,true,array(
+                  
+                  if($this->User->validates())
+                  {
+                        $this->User->save(array(
                         'nom' => $nom,
                         'prenom' => $prenom,
                         'email' => $email,
                         'password' => $this->Auth->password($password),
                         'roles' => $roles
                   ));
-                  $this->redirect('login');
+                        // $this->redirect('login');
+                  }else{
+                        $this->Flash->error(
+                              __('Le post avec l\'id: %s n\'a pas pu être supprimé.')
+                        );
+
+                  }
             }
       }
 
@@ -85,9 +95,13 @@ class UsersController extends AppController
             }
 
             if ($this->User->delete($id)) {
-                  $this->Flash->success(
-                        __('Le post avec id : %s a été supprimé.', h($id))
+                  $this->Session->setFlash(
+                        'Suppression reussie avec succes.',
+                        'alert',
+                        array('class' => 'alert-success')
                   );
+                  return $this->redirect('accueilAdmin');
+
             } else {
                   $this->Flash->error(
                         __('Le post avec l\'id: %s n\'a pas pu être supprimé.', h($id))
@@ -96,7 +110,7 @@ class UsersController extends AppController
 
             return $this->redirect(array('action' => 'accueilAdmin'));
       }
-
+///////////////////////////////// accueilAdmin /////////////////////
       public function accueilAdmin()
       {
             $users = $this->User->find('all');
